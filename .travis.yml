@@ -1,0 +1,35 @@
+language: python
+python:
+  - "3.7"
+
+env:
+  global:
+    - DJANGO_SETTINGS_MODULE="ebdjango.settings"
+    - PYTHONPATH="/home/travis/build/BoyanXu/eb-virt"
+    - PIP_USE_MIRRORS=true
+
+install:
+  - pip install -r requirements.txt
+  - pip install black flake8 coverage coveralls
+
+before_script:
+  - python manage.py migrate
+
+script:
+  - black --check ./
+  - flake8
+  - coverage run --source=polls manage.py test
+
+after_success:
+  - coveralls
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-west-2"
+  app: "django-tutorial"
+  env: "django-env"
+  on:
+    branch: main
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  
