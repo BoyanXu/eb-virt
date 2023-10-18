@@ -16,7 +16,7 @@ before_script:
   - python manage.py migrate
 
 script:
-  - black --check ./
+  - black --check --exclude /migrations/ ./
   - flake8
   - coverage run --source=polls manage.py test
 
@@ -32,4 +32,3 @@ deploy:
     branch: main
   access_key_id: $AWS_ACCESS_KEY
   secret_access_key: $AWS_SECRET_KEY
-  
